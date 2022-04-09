@@ -1,4 +1,4 @@
-# Libreria, CRUD para recursos universitarios o informativos - CRUD en general
+# Libreria, WEBFLUX CRUD para recursos universitarios o informativos - CRUD en general
 
 <p align="center">
 <img src="https://www.sofka.com.co/wp-content/uploads/2021/02/sofkau-logo-horizontal.png">
@@ -11,12 +11,12 @@
 </p>   
 
 ## Video explicatorio
-https://youtu.be/qL62c_8wL94
+--
 
 
 ## Descripcion General
 
-Liberia usando Java mongo repository y spring boot, alojando base de datos en nube
+Sistema para el manejo de libreria usando Java Webflux - reactive mongo repository y spring boot, alojando base de datos en nube Mongo atlas
 
 Requerimientos
 
