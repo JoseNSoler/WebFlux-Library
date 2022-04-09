@@ -82,59 +82,36 @@ public class ResourceTextServiceImpl implements IResourceTextService {
         });
     }
 
-
-
-
-/*
-
-    @Override
-    public ResponseEntity<String> reserveResource(String id) {
-        return resourceTextRepository.findById(id).map((resource) -> {
-            System.out.println(resource);
-            if(resource.isAvailable()) {
-                resource.setAvailable(false);
-                resource.setBorrowTime(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").format(new Date()));
-                resourceTextRepository.save(resource);
-                return new ResponseEntity("Se presto el recurso" + resource, HttpStatus.ACCEPTED);
-                //new ResponseEntity(resource + " fue prestado", HttpStatus.ACCEPTED);
-            };
-           // new ResponseEntity(resource + " no puede ser prestado", HttpStatus.ACCEPTED);
-            return new ResponseEntity("NO SE PRESTO EL RECURSO, YA ESTA PRESTADO!!" + resource, HttpStatus.ACCEPTED);
-
-        }).get();
-    }
-
-    @Override
-    public ResponseEntity<String> returnResource(String id) {
-        return resourceTextRepository.findById(id).map((resource) -> {
-            System.out.println(resource);
-            if(!resource.isAvailable()) {
-                resource.setAvailable(true);
-                resource.setBorrowTime(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").format(new Date()));
-                resourceTextRepository.save(resource);
-                return new ResponseEntity("Se a devuelto el recurso exitosamente" + resource, HttpStatus.ACCEPTED);
-                //new ResponseEntity(resource + " fue prestado", HttpStatus.ACCEPTED);
-            };
-            // new ResponseEntity(resource + " no puede ser prestado", HttpStatus.ACCEPTED);
-            return new ResponseEntity("NO SE PUEDE DEVOLVER EL RECURSO, ESTE NO ESTA PRESTADO!!" + resource, HttpStatus.ACCEPTED);
-
-        }).get();
-    }
-
     public static boolean checkArray( Object arrayOrString, String queryType) {
-        boolean condition =  arrayOrString.getClass().toString().equals("class java.util.ArrayList");
-        if(condition){
+        boolean condition = arrayOrString.getClass().toString().equals("class java.util.ArrayList");
+        if (condition) {
             ArrayList list = new ArrayList<>((Collection<?>) arrayOrString);
             Object newList = list.stream().filter(element -> (element.toString().contains(queryType)))
                     .collect(Collectors.toCollection(ArrayList::new));
             ArrayList listFilter = new ArrayList<>((Collection<?>) newList);
             return (!listFilter.isEmpty());
         }
-        if(!condition){
+        if (!condition) {
             return (String.valueOf(arrayOrString).contains(queryType));
         }
         return false;
     }
+
+    @Override
+    public Flux<ResourceTextDTO> recommendByType(String typeText){
+        var result = resourceTextRepository.findAll();
+
+        if(typeText != null){
+            return resourceMapper.fromCollectionList(
+                    result.filter(resourceText -> resourceText.getFormat() != null)
+                            .filter(resourceText -> (checkArray(resourceText.getFormat(), typeText)))
+            );
+        }
+        ResourceTextDTO resourceText = new ResourceTextDTO();
+        resourceText.setDescription("No exister recurso con los parametros solicitados");
+        return Flux.just(resourceText);
+    }
+
 
     public static boolean checkSubject(ResourceText subject, String querySubject){
         String subjectList =  subject.getSubject().toString();
@@ -144,55 +121,19 @@ public class ResourceTextServiceImpl implements IResourceTextService {
 
 
     @Override
-    public List<ResourceTextDTO> recommendedResource(String typeText, String subject){
+    public Flux<ResourceTextDTO> recommendBySubject(String subject){
         var result = resourceTextRepository.findAll();
 
-        if(typeText != null && subject != null){
+        if(subject != null){
             return resourceMapper.fromCollectionList(
-                    result.stream()
-                    .filter(resourceText -> resourceText.getSubject() != null && resourceText.getFormat() != null)
-                    .filter(resourceText -> (
-                            (checkSubject(resourceText, subject) && (checkArray(resourceText.getFormat(), typeText)) )
-                    ))
-                    .collect(Collectors.toList())
-            );
-        }
-
-        if(typeText == null && subject != null){
-            return resourceMapper.fromCollectionList(
-                    result.stream()
-                    .filter(resourceText -> resourceText.getSubject() != null)
-                    .filter(resourceText -> ( (checkSubject(resourceText, subject)) ))
-                    .collect(Collectors.toList())
-            );
-        }
-        if(typeText != null && subject == null){
-            return resourceMapper.fromCollectionList(
-                    result.stream()
-                    .filter(resourceText -> resourceText.getFormat() != null)
-                    .filter(resourceText -> (checkArray(resourceText.getFormat(), typeText)))
-                    .collect(Collectors.toList())
+                    result.filter(resourceText -> resourceText.getSubject() != null)
+                            .filter(resourceText -> ( (checkSubject(resourceText, subject)) ))
             );
         }
         ResourceTextDTO resourceText = new ResourceTextDTO();
         resourceText.setDescription("No exister recurso con los parametros solicitados");
-        return List.of(resourceText);
+        return Flux.just(resourceText);
     }
 
-
-
-
-
-    @Override
-    public ResourceTextDTO deleteById(String id) {
-        ResourceText barry = resourceTextRepository.findById(id).get();
-        if(!barry.getId().isEmpty())
-            resourceTextRepository.deleteById(id);
-
-        return resourceMapper.fromResource(
-                barry
-        );
-    }
-*/
 
 }

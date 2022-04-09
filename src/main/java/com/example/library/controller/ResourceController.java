@@ -32,6 +32,17 @@ public class ResourceController {
         return ok().body(this.resourceTextService.findAll(), ResourceTextDTO.class);
     }
 
+    public Mono<ServerResponse> recommendBySubject(ServerRequest req) {
+        return ok().body(this.resourceTextService.recommendBySubject(String.valueOf(req.pathVariable("subject")))
+                , ResourceTextDTO.class);
+    }
+
+    public Mono<ServerResponse> recommendByType(ServerRequest req) {
+        return ok().body(this.resourceTextService.recommendByType(String.valueOf(req.pathVariable("type")))
+                , ResourceTextDTO.class);
+    }
+
+
     public Mono<ServerResponse> getById(ServerRequest req) {
         return this.resourceTextService.getById(String.valueOf(req.pathVariable("id")))
                 .flatMap(post -> ok().syncBody(post))
@@ -55,6 +66,8 @@ public class ResourceController {
                 .flatMap(post -> ok().body(post, ResourceTextDTO.class))
                 .switchIfEmpty(notFound().build());
     }
+
+
 
 
 

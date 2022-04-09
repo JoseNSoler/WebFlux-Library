@@ -15,6 +15,8 @@ public interface IResourceTextService {
     Mono<ResourceTextDTO> save(ResourceTextDTO resourceTextDTO);
     Mono<Object> reserveByID(String id);
     Mono<Object> returnByID(String id);
+    Flux<ResourceTextDTO> recommendByType(String typeText);
+    Flux<ResourceTextDTO> recommendBySubject(String subject);
 /*
     ResponseEntity<String>  reserveResource(String id);
     ResponseEntity<String> returnResource(String id);

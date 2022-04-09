@@ -24,7 +24,9 @@ public class WebFluxConfig implements WebFluxConfigurer {
                 .andRoute(POST("/posts").and(contentType(APPLICATION_JSON)), resourceController::save)
                 .andRoute(GET("/getByID/{id}"), resourceController::getById)
                 .andRoute(PUT("/reserveByID/{id}"), resourceController::reserveByID)
-                .andRoute(PUT("/returnByID/{id}"), resourceController::returnByID);
+                .andRoute(PUT("/returnByID/{id}"), resourceController::returnByID)
+                .andRoute(GET("/recommendByType/{type}"), resourceController::recommendByType)
+                .andRoute(GET("/recommendBySubject/{subject}"), resourceController::recommendBySubject);
     }
 
     @Bean

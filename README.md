@@ -16,7 +16,7 @@
 
 ## Descripcion General
 
-Sistema para el manejo de libreria usando Java Webflux - reactive mongo repository y spring boot, alojando base de datos en nube Mongo atlas
+Sistema para el manejo de libreria usando Java Webflux - reactive mongo repository y spring boot - Netty HTTP server, alojando base de datos en nube Mongo atlas
 
 Requerimientos
 
